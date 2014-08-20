@@ -7,16 +7,19 @@ import java.util.ArrayList;
 import org.apache.commons.io.FileUtils;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
 public class TodoActivity extends Activity {
-
+	private final int REQUEST_CODE = 20;
+	
 	private ArrayList<String> items;
 	private ArrayAdapter<String> itemsAdapter;
 	private ListView lvItems;
@@ -54,7 +57,33 @@ public class TodoActivity extends Activity {
 				return true;
 			}
 		});
+    	
+    	lvItems.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				Intent i = new Intent(TodoActivity.this, EditItemActivity.class);
+				i.putExtra("value", items.get(position));
+				i.putExtra("index", position);
+				startActivityForResult(i, REQUEST_CODE);
+				
+			}
+		});
     }
+    
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+      // REQUEST_CODE is defined above
+      if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+         String value = data.getExtras().getString("value");
+         int index = data.getExtras().getInt("index");
+         
+         items.set(index, value);
+         itemsAdapter.notifyDataSetChanged();
+         saveItems();
+      }
+    } 
     
     private void readItems() {
     	File filesDir = getFilesDir();

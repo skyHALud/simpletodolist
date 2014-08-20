@@ -3,5 +3,7 @@
 
     <string name="app_name">SimpleTodoList</string>
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_edit_item">EditItemActivity</string>
+    <string name="action_settings">Settings</string>
 
 </resources>
