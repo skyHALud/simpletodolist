@@ -75,7 +75,7 @@ public class EditItemActivity extends Activity {
 			
 		});
 		
-		btnChosePicture = (Button) findViewById(R.id.btnChosePicture);
+		btnChosePicture = (Button) findViewById(R.id.btnChoosePicture);
 		btnChosePicture.setOnClickListener(new OnClickListener() {
 
 			@Override
