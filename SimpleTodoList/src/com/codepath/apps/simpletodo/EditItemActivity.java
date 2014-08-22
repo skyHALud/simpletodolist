@@ -34,6 +34,7 @@ public class EditItemActivity extends Activity {
 	public final static int PICK_PHOTO_CODE = 1046;
 	public String photoFileName = "photo.jpg";
 	private View btnChosePicture;
+	private TodoEntry value;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,14 +47,16 @@ public class EditItemActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				EditText etValue = (EditText) findViewById(R.id.etEditItemValue);
-				  // Prepare data intent 
-				  Intent data = new Intent();
-				  // Pass relevant data back as a result
-				  data.putExtra("value", etValue.getText().toString());
-				  data.putExtra("index", index);
-				  // Activity finished ok, return the data
-				  setResult(RESULT_OK, data); // set result code and bundle data for response
-				  finish(); // closes the activity, pass data to parent				
+				value.value = etValue.getText().toString();
+				// Prepare data intent
+				Intent data = new Intent();
+				// Pass relevant data back as a result
+				data.putExtra("value", value);
+				data.putExtra("index", index);
+				// Activity finished ok, return the data
+				setResult(RESULT_OK, data); // set result code and bundle data
+											// for response
+				finish(); // closes the activity, pass data to parent
 			}
 			
 		});
@@ -86,47 +89,52 @@ public class EditItemActivity extends Activity {
 			
 		});
 		
-		String value = getIntent().getStringExtra("value");
+		value = (TodoEntry) getIntent().getSerializableExtra("value");
 		index = getIntent().getIntExtra("index", -1);
 		
 		EditText etValue = (EditText) findViewById(R.id.etEditItemValue);
-		etValue.setText(value);
+		etValue.setText(value.value);
 	}
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-	    switch(requestCode) {
-	    case CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE:
-	       if (resultCode == RESULT_OK) {
-	         Uri takenPhotoUri = getPhotoFileUri(photoFileName);
-	         // by this point we have the camera photo on disk
-	         Bitmap takenImage = BitmapFactory.decodeFile(takenPhotoUri.getPath());
-	         // Load the taken image into a preview
-	         ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
-	         ivPreview.setImageBitmap(takenImage);   
-	       } else { // Result was a failure
-	    	   Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
-	       }
-	       break;
-	    
-		case PICK_PHOTO_CODE:
-	    	if (data != null) {
-	            try {
-					Uri photoUri = data.getData();
-					// Do something with the photo based on Uri
-					Bitmap selectedImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
-					// Load the selected image into a preview
-					ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
-					ivPreview.setImageBitmap(selectedImage);
-				} catch (IOException e) {
-					Log.e(this.getClass().getName(), e.getMessage(), e);
-					Toast.makeText(this, "Could not access picture!", Toast.LENGTH_SHORT).show();
-				}
-	        } else {
-	        	Toast.makeText(this, "No picture selected", Toast.LENGTH_SHORT).show();
-	        }
-	    	break;
-	    }
+		if(resultCode == RESULT_OK) {
+		    switch(requestCode) {
+		    case CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE:
+		       if (resultCode == RESULT_OK) {
+		         Uri takenPhotoUri = getPhotoFileUri(photoFileName);
+		         // by this point we have the camera photo on disk
+		         Bitmap takenImage = BitmapFactory.decodeFile(takenPhotoUri.getPath());
+		         // Load the taken image into a preview
+		         ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
+		         ivPreview.setImageBitmap(takenImage);
+		         value.image = photoFileName;
+		       } else { // Result was a failure
+		    	   Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
+		       }
+		       break;
+		    
+			case PICK_PHOTO_CODE:
+		    	if (data != null) {
+		            try {
+						Uri photoUri = data.getData();
+						// Do something with the photo based on Uri
+						Bitmap selectedImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
+						// Load the selected image into a preview
+						ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
+						ivPreview.setImageBitmap(selectedImage);
+						
+						value.image = photoUri.toString();
+					} catch (IOException e) {
+						Log.e(this.getClass().getName(), e.getMessage(), e);
+						Toast.makeText(this, "Could not access picture!", Toast.LENGTH_SHORT).show();
+					}
+		        } else {
+		        	Toast.makeText(this, "No picture selected", Toast.LENGTH_SHORT).show();
+		        }
+		    	break;
+		    }
+		}
 	}
 	
 	// Returns the Uri for a photo stored on disk given the fileName

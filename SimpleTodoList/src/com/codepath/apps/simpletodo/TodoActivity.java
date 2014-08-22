@@ -8,7 +8,9 @@ import org.apache.commons.io.FileUtils;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -20,8 +22,8 @@ import android.widget.ListView;
 public class TodoActivity extends Activity {
 	private final int REQUEST_CODE = 20;
 	
-	private ArrayList<String> items;
-	private ArrayAdapter<String> itemsAdapter;
+	private ArrayList<TodoEntry> items;
+	private ArrayAdapter<TodoEntry> itemsAdapter;
 	private ListView lvItems;
 	
     @Override
@@ -30,9 +32,9 @@ public class TodoActivity extends Activity {
         setContentView(R.layout.activity_todo);
         
         lvItems = (ListView) findViewById(R.id.lvItems);
-        items = new ArrayList<String>();
+        items = new ArrayList<TodoEntry>();
         readItems();
-        itemsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items);
+        itemsAdapter = new ArrayAdapter<TodoEntry>(this, android.R.layout.simple_list_item_1, items);
         lvItems.setAdapter(itemsAdapter);
         
         setupListViewListener();
@@ -40,7 +42,7 @@ public class TodoActivity extends Activity {
     
     public void addTodoItem(View v) {
     	EditText etNewItem = (EditText)findViewById(R.id.etNewItem);
-    	itemsAdapter.add(etNewItem.getText().toString());
+    	itemsAdapter.add(new TodoEntry(etNewItem.getText().toString()));
     	etNewItem.setText("");
     	saveItems();
     }
@@ -76,7 +78,7 @@ public class TodoActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
       // REQUEST_CODE is defined above
       if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
-         String value = data.getExtras().getString("value");
+         TodoEntry value = (TodoEntry) data.getSerializableExtra("value");
          int index = data.getExtras().getInt("index");
          
          items.set(index, value);
@@ -88,13 +90,15 @@ public class TodoActivity extends Activity {
     private void readItems() {
     	File filesDir = getFilesDir();
     	File todoFile = new File(filesDir, "todo.txt");
+    
+    	Log.w(getClass().getName(), "Data loading not working yet");
     	
-    	try {
-    		items = new ArrayList<String>(FileUtils.readLines(todoFile));
-    	} catch(IOException e) {
-    		items = new ArrayList<String>();
-    		e.printStackTrace();
-    	}
+//    	try {
+//    		items = new ArrayList<TodoEntry>(FileUtils.readLines(todoFile));
+//    	} catch(IOException e) {
+    		items = new ArrayList<TodoEntry>();
+//    		e.printStackTrace();
+//    	}
     }
     
     private void saveItems() {
