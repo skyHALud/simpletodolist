@@ -8,8 +8,9 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -53,11 +54,30 @@ public class TodoActivity extends Activity {
     	lvItems.setOnItemLongClickListener(new OnItemLongClickListener() {
 
 			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				items.remove(position);
-				itemsAdapter.notifyDataSetChanged();
-				saveItems();
+			public boolean onItemLongClick(AdapterView<?> parent, View view,final int position, long id) {
+				
+				DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+				    @Override
+				    public void onClick(DialogInterface dialog, int which) {
+				        switch (which){
+				        case DialogInterface.BUTTON_POSITIVE:
+							items.remove(position);
+							itemsAdapter.notifyDataSetChanged();
+							saveItems();
+
+				            break;
+
+				        case DialogInterface.BUTTON_NEGATIVE:
+				            //No button clicked
+				            break;
+				        }
+				    }
+				};
+
+				AlertDialog.Builder builder = new AlertDialog.Builder(TodoActivity.this);
+				builder.setMessage("Delete the entry?").setPositiveButton("Yes", dialogClickListener)
+				    .setNegativeButton("No", dialogClickListener).show();
+
 				return true;
 			}
 		});
