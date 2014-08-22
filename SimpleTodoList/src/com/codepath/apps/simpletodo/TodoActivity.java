@@ -3,6 +3,7 @@ package com.codepath.apps.simpletodo;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 
@@ -18,6 +19,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class TodoActivity extends Activity {
 	private final int REQUEST_CODE = 20;
@@ -93,19 +95,42 @@ public class TodoActivity extends Activity {
     
     	Log.w(getClass().getName(), "Data loading not working yet");
     	
-//    	try {
-//    		items = new ArrayList<TodoEntry>(FileUtils.readLines(todoFile));
-//    	} catch(IOException e) {
+    	try {
+    		List<String> lines = FileUtils.readLines(todoFile);
     		items = new ArrayList<TodoEntry>();
-//    		e.printStackTrace();
-//    	}
+    		
+    		int errorCount = 0;
+    		
+    		for(String line : lines) {
+    			TodoEntry entry = TodoEntry.deserialize(line);
+    			
+    			if(entry != null) {
+    				items.add(entry);
+    			} else {
+    				errorCount ++;
+    			}
+    		}
+    		
+    		if(errorCount > 0) {
+				Toast.makeText(this, errorCount + " items could not be loaded", Toast.LENGTH_LONG).show();
+    		} else {
+    			Toast.makeText(this, "Data loaded", Toast.LENGTH_SHORT).show();
+    		}
+    	} catch(IOException e) {
+    		items = new ArrayList<TodoEntry>();
+    		e.printStackTrace();
+    	}
     }
     
     private void saveItems() {
     	File filesDir = getFilesDir();
     	File todoFile = new File(filesDir, "todo.txt");
     	try {
-    		FileUtils.writeLines(todoFile, items);
+    		List<String> lines = new ArrayList<String>();
+    		for(TodoEntry entry : items) {
+    			lines.add(entry.serialize());
+    		}
+    		FileUtils.writeLines(todoFile, lines);
     	} catch(IOException e) {
     		e.printStackTrace();
     	}
