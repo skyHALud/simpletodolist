@@ -32,12 +32,37 @@
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <Button
+        android:id="@+id/btnTakePicture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/lblItemValue"
+        android:layout_below="@+id/etEditItemValue"
+        android:text="Take Picture" />
+
+    <Button
         android:id="@+id/btnSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/etEditItemValue"
-        android:layout_below="@+id/etEditItemValue"
-        android:layout_marginTop="14dp"
+        android:layout_below="@+id/btnTakePicture"
+        android:layout_marginTop="77dp"
         android:text="Save" />
+
+    <ImageView
+        android:id="@+id/ivPreview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnTakePicture"
+        android:layout_marginTop="22dp"
+        android:layout_toRightOf="@+id/btnSave"
+        android:src="@android:drawable/alert_dark_frame" />
+
+    <Button
+        android:id="@+id/btnChosePicture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/ivPreview"
+        android:layout_toRightOf="@+id/ivPreview"
+        android:text="Chose Picture" />
 
 </RelativeLayout>
