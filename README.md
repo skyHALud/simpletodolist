@@ -13,6 +13,7 @@ Completed items:
   3. take a photo and link it to an item (new in 1.1)
   4. attach an existing photo to an item (experimental; new in 1.1)
   5. record and link an audio file to an item (new in 1.1)
+  6. using Toast popups to make app more chatty and user friendly (new in 1.1)
 
 Screencast:
 
