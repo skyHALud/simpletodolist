@@ -9,13 +9,76 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".EditItemActivity" >
 
+    <ImageView
+        android:id="@+id/ivPreview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignTop="@+id/btnChoosePicture"
+        android:layout_toRightOf="@+id/btnChoosePicture"
+        android:contentDescription="Preview"
+        android:src="@android:drawable/alert_dark_frame" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView1"
+        android:layout_below="@+id/etEditItemValue"
+        android:text="Audio"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Button
+        android:id="@+id/btnStartRecording"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/btnChoosePicture"
+        android:layout_below="@+id/textView2"
+        android:text="Record" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tmp"
+        android:layout_alignParentTop="true"
+        android:text="Value"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Button
+        android:id="@+id/btnPlay"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/btnStartRecording"
+        android:layout_alignBottom="@+id/btnStartRecording"
+        android:layout_alignRight="@+id/etEditItemValue"
+        android:text="Play" />
+
+    <Button
+        android:id="@+id/btnStopRecording"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/btnPlay"
+        android:layout_centerHorizontal="true"
+        android:enabled="false"
+        android:text="Stop" />
+
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/ivPreview"
+        android:layout_alignLeft="@+id/btnTakePicture"
+        android:text="Save" />
+
     <EditText
         android:id="@+id/etEditItemValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="63dp"
+        android:layout_alignTop="@+id/textView3"
+        android:layout_toRightOf="@+id/textView1"
         android:ems="10"
         android:inputType="textMultiLine" >
 
@@ -23,60 +86,30 @@
     </EditText>
 
     <TextView
-        android:id="@+id/lblItemValue"
+        android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/tmp"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="16dp"
-        android:text="Edit Item Below:"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:layout_alignLeft="@+id/textView3"
+        android:layout_below="@+id/btnStartRecording"
+        android:layout_marginTop="18dp"
+        android:text="Picture"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Button
+        android:id="@+id/btnChoosePicture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView1"
+        android:layout_below="@+id/textView1"
+        android:layout_marginTop="14dp"
+        android:text="Choose..." />
 
     <Button
         android:id="@+id/btnTakePicture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/textView1"
-        android:layout_below="@+id/textView1"
-        android:layout_marginTop="14dp"
-        android:text="Take..." />
-
-    <Button
-        android:id="@+id/btnChoosePicture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/btnTakePicture"
-        android:layout_alignBottom="@+id/btnTakePicture"
-        android:layout_marginLeft="36dp"
-        android:layout_toRightOf="@+id/btnTakePicture"
-        android:text="Choose..." />
-
-    <ImageView
-        android:id="@+id/ivPreview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:layout_below="@+id/btnChoosePicture"
-        android:layout_marginTop="50dp"
-        android:layout_toRightOf="@+id/btnTakePicture"
-        android:contentDescription="Preview"
-        android:src="@android:drawable/alert_dark_frame" />
-
-    <Button
-        android:id="@+id/btnSave"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/btnTakePicture"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="36dp"
-        android:text="Save" />
-
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/lblItemValue"
-        android:layout_below="@+id/etEditItemValue"
-        android:text="Picture"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:text="Take..." />
 
 </RelativeLayout>

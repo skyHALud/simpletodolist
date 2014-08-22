@@ -12,6 +12,7 @@ public class TodoEntry implements Serializable{
 	
 	public String value;
 	public String image;
+	public String audio;
 	
 	public TodoEntry() {}
 	
@@ -19,15 +20,30 @@ public class TodoEntry implements Serializable{
 		this.value = value;
 	}
 
-	public String serialize() { return String.format("%s%s%s", value, SEPARATOR, image); }
+	public String serialize() { 
+		String data = String.format("%s%s%s%s%s", value, SEPARATOR, image, SEPARATOR, audio);
+		Log.i(getClass().getName(), "Serializing to " + data);
+		return data; 
+	}
 	
 	public static TodoEntry deserialize(String data) {
 		try {
+			Log.i(TodoEntry.class.getName(), "Derializing " + data);
+			
 			StringTokenizer tok = new StringTokenizer(data, SEPARATOR.toString());
 			
 			TodoEntry entry = new TodoEntry();
 			entry.value = tok.nextToken();
 			entry.image = tok.nextToken();
+			entry.audio = tok.nextToken();
+			
+			if(entry.image.equals("null")) {
+				entry.image = null;
+			}
+			
+			if(entry.audio.equals("null")) {
+				entry.audio = null;
+			}
 			
 			return entry;
 		} catch (Throwable th) {

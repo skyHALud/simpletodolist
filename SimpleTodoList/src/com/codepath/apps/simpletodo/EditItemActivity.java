@@ -1,13 +1,18 @@
 package com.codepath.apps.simpletodo;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+
+import org.apache.commons.lang.StringUtils;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -27,6 +32,9 @@ public class EditItemActivity extends Activity {
 	private Button btnSave;
 	private int index;
 	private Button btnTakePicture;
+	
+	private String audioFileName;
+	private MediaRecorder mediaRecorder;
 
 	public final String APP_TAG = "MyCustomApp";
 	public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
@@ -35,6 +43,9 @@ public class EditItemActivity extends Activity {
 	public String photoFileName = "photo.jpg";
 	private View btnChosePicture;
 	private TodoEntry value;
+	private Button btnRecordAudio;
+	private Button btnStopRecording;
+	private Button btnPlaybackRecording;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -89,8 +100,85 @@ public class EditItemActivity extends Activity {
 			
 		});
 		
+		btnRecordAudio = (Button) findViewById(R.id.btnStartRecording);
+		btnRecordAudio.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// Verify that the device has a mic first
+				PackageManager pmanager = EditItemActivity.this.getPackageManager();
+				if (pmanager.hasSystemFeature(PackageManager.FEATURE_MICROPHONE)) {
+				    // Set the file location for the audio
+				    audioFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
+				    audioFileName += "/simpletodolist-" + System.currentTimeMillis() + ".3gp";
+				    // Create the recorder
+				    mediaRecorder = new MediaRecorder();
+				    // Set the audio format and encoder
+				    mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+				    mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+				    mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+				    // Setup the output location
+				    mediaRecorder.setOutputFile(audioFileName);
+				    try {
+				    	Log.i(getClass().getName(), "Recording started...");
+				    	
+						// Start the recording
+						mediaRecorder.prepare();
+
+						Toast.makeText(EditItemActivity.this, "Recording... Talk!", Toast.LENGTH_LONG).show();
+						mediaRecorder.start();
+						
+						btnRecordAudio.setEnabled(false);
+						btnStopRecording.setEnabled(true);
+					} catch (IOException e) {
+						Log.e(getClass().getName(), e.getMessage(), e);
+						Toast.makeText(EditItemActivity.this, "Could not record audio!", Toast.LENGTH_LONG).show();
+					}
+				} else { // no mic on device
+				    Toast.makeText(EditItemActivity.this, "This device doesn't have a mic!", Toast.LENGTH_LONG).show();
+				}
+			}
+			
+		});
+		btnStopRecording = (Button) findViewById(R.id.btnStopRecording);
+		btnStopRecording.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if(mediaRecorder != null) {
+					mediaRecorder.stop();
+					
+					value.audio = audioFileName;
+					
+					Log.i(getClass().getName(), "Recording stopped. Saved recorded audio to " + audioFileName);
+					
+					btnRecordAudio.setEnabled(true);
+					btnStopRecording.setEnabled(false);
+					btnPlaybackRecording.setEnabled(true);
+				}
+			}
+		});
+		
+		btnPlaybackRecording = (Button) findViewById(R.id.btnPlay);
+		btnPlaybackRecording.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				try {
+					MediaPlayer mediaPlayer = new MediaPlayer();
+					mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+					mediaPlayer.setDataSource(value.audio);
+					mediaPlayer.prepare(); // must call prepare first
+					mediaPlayer.start(); // then start
+				} catch(Throwable th) {
+					Log.e(getClass().getName(), th.getMessage(), th);
+					Toast.makeText(EditItemActivity.this, "Playback failed!", Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
+		
 		value = (TodoEntry) getIntent().getSerializableExtra("value");
 		index = getIntent().getIntExtra("index", -1);
+		
+		btnPlaybackRecording.setEnabled(!StringUtils.isEmpty(value.audio));
 		
 		EditText etValue = (EditText) findViewById(R.id.etEditItemValue);
 		etValue.setText(value.value);
