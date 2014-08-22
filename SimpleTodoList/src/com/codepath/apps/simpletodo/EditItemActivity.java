@@ -183,9 +183,11 @@ public class EditItemActivity extends Activity {
 		EditText etValue = (EditText) findViewById(R.id.etEditItemValue);
 		etValue.setText(value.value);
 		
-		Uri takenPhotoUri = getPhotoFileUri(value.image);
-		ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
-        ivPreview.setImageBitmap(BitmapFactory.decodeFile(takenPhotoUri.getPath()));
+		if(value.image != null) {
+			Uri takenPhotoUri = getPhotoFileUri(value.image);
+			ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
+	        ivPreview.setImageBitmap(BitmapFactory.decodeFile(takenPhotoUri.getPath()));
+		}
 	}
 
 	@Override
