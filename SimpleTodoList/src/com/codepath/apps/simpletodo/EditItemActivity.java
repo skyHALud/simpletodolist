@@ -27,6 +27,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.rdkc.simpletodosharedlibrary.TodoEntry;
+
 public class EditItemActivity extends Activity {
 
 	private Button btnSave;

@@ -1,4 +1,4 @@
-package com.codepath.apps.simpletodo;
+package com.rdkc.simpletodosharedlibrary;
 
 import java.io.Serializable;
 import java.util.StringTokenizer;

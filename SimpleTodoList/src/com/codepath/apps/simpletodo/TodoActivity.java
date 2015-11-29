@@ -22,6 +22,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.rdkc.simpletodosharedlibrary.TodoEntry;
+
 public class TodoActivity extends Activity {
 	private final int REQUEST_CODE = 20;
 	
